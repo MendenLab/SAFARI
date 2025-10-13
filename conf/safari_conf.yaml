@@ -1,0 +1,24 @@
+debug: false
+kernel: linear
+vif: false
+
+scorer: f1
+reference_gene: [TBP, SDHAF]
+augmentation: false
+permutation: relative
+normalization: delta
+model: logistic
+train_augmentation: noise
+disease_subset: !!null
+#disease_subset: Eczema
+#train_augmentation: !!null
+paths:
+  base_predictions: "/lustre/groups/cbm01/datasets/martin.meinel/Safari/Test_set_predictions_paper"
+  featureFile: "/lustre/groups/cbm01/workspace/martin.meinel/Safari/Final_feature_files/combination10.xlsx"
+  trainingSet: "/lustre/groups/cbm01/datasets/martin.meinel/Safari/train_update.xlsx"
+  testSet: "/lustre/groups/cbm01/datasets/martin.meinel/Safari/Test_data_complete.xlsx"
+  base_predictionsLocal: "/Users/martin.meinel/Desktop/Projects/Eyerich Projects/Natalie/Classifier/Validation data/Test data/Test_set_predictions_paper/local"
+  featureFileLocal: "/Users/martin.meinel/Desktop/Projects/Eyerich Projects/Natalie/Classifier/Final_feature_files/combination10.xlsx"
+  trainingSetLocal: "/Users/martin.meinel/Desktop/Projects/Eyerich Projects/Natalie/Classifier/Validation data/Test data/train_update.xlsx"
+  testSetLocal: "/Users/martin.meinel/Desktop/Projects/Eyerich Projects/Natalie/Classifier/Validation data/Test data/Test_data_complete.xlsx"
+

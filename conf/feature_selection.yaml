@@ -1,0 +1,32 @@
+defaults:
+  - safari_conf
+  - _self_
+
+model: FFS
+ffs_model: logistic
+runs: ${run_type}
+
+run_type: mf
+
+schema:
+  run_type:
+    type: str
+    allowed: [mf, psoriasis]
+  model:
+    type: str
+    allowed: [FFS, logistic]
+
+
+paths:
+  workdir: "/lustre/groups/cbm01/workspace/martin.meinel/Safari"
+  datadir: "/lustre/groups/cbm01/datasets/martin.meinel/Safari"
+  datadir_pso: ${paths.datadir}/Psoriasis_Eczema
+
+
+mf:
+  output_file: ${paths.workdir}/FFS_mf_pso_ec_${ffs_model}_${now:%Y_%m_%d}.xlsx
+  counts: ${paths.datadir}/mf_pso_ec_dds.rds
+  data_split: ${paths.datadir}/train_test_ec_pso_mf.xlsx
+  d1_nl_path: ${paths.datadir}/pso_eczema_nonL_results_unpaired_edgeR_wo_mf.rds
+  d2_nl_path: ${paths.datadir}/cutaneous_lymphoma_results_unpaired_edgeR_wo_mf.rds
+  n_samples: 3

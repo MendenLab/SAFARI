@@ -1,0 +1,9 @@
+defaults:
+  - safari_conf
+  - _self_
+
+featureFile: ${paths.featureFile}
+mode: [baseline, gridsearch_cv, threshold_tuning]
+#mode: [baseline]
+permutation_strengths: [0]
+trainingSet: ${paths.trainingSet}

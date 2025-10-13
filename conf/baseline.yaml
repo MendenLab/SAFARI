@@ -1,0 +1,17 @@
+defaults:
+  - safari_conf
+  - feature_selection
+  - _self_
+
+features: non_lesional
+model: logistic
+baselineFile: ${paths.baselinePath}/${model}_${features}.xlsx
+
+
+schema:
+  features:
+    type: str
+    allowed: [all, non_lesional, lowly_expressed_filtered]
+
+paths:
+  baselinePath: "/lustre/groups/cbm01/datasets/martin.meinel/Safari/Baseline"

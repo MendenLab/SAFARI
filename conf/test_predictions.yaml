@@ -1,0 +1,29 @@
+defaults:
+  - safari_conf
+  - _self_
+
+mode: baseline
+predict: test
+calibration: true
+
+run_type: local
+skip_ct_mask: false
+
+schema:
+  run_type:
+    type: str
+    allowed: [local, cluster]
+
+
+cluster:
+  featureFile: ${paths.featureFile}
+  save_dir: ${paths.base_predictions}
+  testSet: ${paths.testSet}
+  trainingSet: ${paths.trainingSet}
+
+local:
+  featureFile: ${paths.featureFileLocal}
+  save_dir: ${paths.base_predictionsLocal}
+  testSet: ${paths.testSetLocal}
+  trainingSet: ${paths.trainingSetLocal}
+

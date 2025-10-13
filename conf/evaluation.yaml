@@ -1,0 +1,22 @@
+defaults:
+  - safari_conf
+  - feature_selection
+  - _self_
+
+
+scorer: f1
+#model: logistic
+#model: SVM
+model: xgboost
+svm_kernel: linear
+#featureFile: ${paths.evaluation_path_logistic}
+#featureFile: ${paths.evaluation_path_svm}
+featureFile: ${paths.evaluation_path_xgboost}
+basePath: ${paths.outputPath}
+
+
+paths:
+  evaluation_path_logistic: "/lustre/groups/cbm01/workspace/martin.meinel/Safari/FFS_mf_pso_ec_logistic_2025_08_03.xlsx"
+  evaluation_path_svm: "/lustre/groups/cbm01/workspace/martin.meinel/Safari/FFS_mf_pso_ec_svm_2025_08_03.xlsx"
+  evaluation_path_xgboost: "/lustre/groups/cbm01/workspace/martin.meinel/Safari/FFS_mf_pso_ec_xgboost_2025_08_04.xlsx"
+  outputPath: "/lustre/groups/cbm01/datasets/martin.meinel/Safari/Evaluation_results"
