@@ -14,4 +14,4 @@ schema:
     allowed: [all, non_lesional, lowly_expressed_filtered]
 
 paths:
-  baselinePath: "/lustre/groups/cbm01/datasets/martin.meinel/Safari/Baseline"
+  baselinePath: "/datasets/Safari/Baseline"

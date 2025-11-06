@@ -109,7 +109,7 @@ def create_boxplot_with_stats(df: pd.DataFrame, file_name, annotate):
     plt.grid(False)
     plt.tight_layout()
     plt.savefig(
-            f"/Users/martin.meinel/Desktop/Projects/Eyerich Projects/Natalie/Classifier/Final_results/Figures/Figure2/{file_name}_boxplot.svg",bbox_inches="tight")
+            f"/Figures/Figure2/{file_name}_boxplot.svg",bbox_inches="tight")
     plt.show()
     plt.close()
 
@@ -157,11 +157,11 @@ def create_baseline_boxplot_with_stats(df, baseline="1"):
     plt.tight_layout()
     if baseline == "1":
         plt.savefig(
-            f"/Users/martin.meinel/Desktop/Projects/Eyerich Projects/Natalie/Classifier/Final_results/Figures/Baseline/ffs_all_genes_boxplot.svg",
+            f"/Figures/Baseline/ffs_all_genes_boxplot.svg",
             bbox_inches="tight")
     else:
         plt.savefig(
-            f"/Users/martin.meinel/Desktop/Projects/Eyerich Projects/Natalie/Classifier/Final_results/Figures/Baseline/ffs_lesional_genes_boxplot.svg",
+            f"/Figures/Baseline/ffs_lesional_genes_boxplot.svg",
             bbox_inches="tight")
     plt.show()
     plt.close()
@@ -174,7 +174,7 @@ def main():
     if plot == "a":
         adata = create_anndata()
         adata = adata[adata.obs.diag.isin(["cutaneous lymphoma", "psoriasis", "eczema"])].copy()
-        adata = normalize_data(adata, mode="TMM")
+        adata = normalize_data(adata)
         adata = adata[:, adata.var.Gene_name.isin(genes)]
         df = pd.DataFrame(data=adata.X, columns=adata.var.Gene_name, index=adata.obs_names)
         diag = pd.Series([x if x == "cutaneous lymphoma" else "pso_ec" for x in adata.obs.diag], name="diag")
@@ -189,7 +189,7 @@ def main():
             genes = ["HOMER1", "GPR68", "LMOD1", "CDK14", "SS18", "PEX7"]
         adata = create_anndata()
         adata = adata[adata.obs.diag.isin(["cutaneous lymphoma", "psoriasis", "eczema"])].copy()
-        adata = normalize_data(adata, mode="TMM")
+        adata = normalize_data(adata)
         adata = adata[:, adata.var.Gene_name.isin(genes)]
         df = pd.DataFrame(data=adata.X, columns=adata.var.Gene_name, index=adata.obs_names)
         diag = pd.Series([x if x == "cutaneous lymphoma" else "pso_ec" for x in adata.obs.diag], name="diag")

@@ -3,7 +3,6 @@ import hydra
 from omegaconf import DictConfig
 import numpy as np
 from tqdm import tqdm
-import os
 from R_helpers import robustRankAggregation
 from pyutils import createDataFromFiles, addSignInformation
 
@@ -31,7 +30,7 @@ def main(cfg: DictConfig) -> None:
         # Check whether there are genes left after filtering for significant ones
         if ts.normalizedCounts.shape[0] == 0:
             continue
-        ts.train(method=cfg.model, ffs_model=cfg.ffs_model)
+        ts.train(ffs_model=cfg.ffs_model)
         bootstrap_lists.append(bootstrap)
         # used only for debugging
         training_sets.append(ts)

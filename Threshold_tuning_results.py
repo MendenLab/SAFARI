@@ -15,13 +15,13 @@ sns.set_style("white")
 
 def collect_data(genes: str, augmented_training, scorer_name, modes, disease=None, reference_gene = "both"):
     if disease is not None:
-        base_path = "/lustre/groups/cbm01/datasets/martin.meinel/Safari/Robustness_study/relative/delta/augmentation_noise"
+        base_path = "/Robustness_study/relative/delta/augmentation_noise"
         base_path = os.path.join(base_path, disease, "mixed_data")
     else:
         if augmented_training is not None:
-            base_path = "/lustre/groups/cbm01/datasets/martin.meinel/Safari/Robustness_study/relative/delta/augmentation_noise/mixed_data"
+            base_path = "/Robustness_study/relative/delta/augmentation_noise/mixed_data"
         else:
-            base_path = "/lustre/groups/cbm01/datasets/martin.meinel/Safari/Robustness_study/relative/delta/mixed_data"
+            base_path = "/Safari/Robustness_study/relative/delta/mixed_data"
     augmentation_strengths = [0.5]
     relative_shifts = [-1, 0, 1]
     data = []
@@ -124,9 +124,9 @@ def create_boxplot(data: pd.DataFrame, genes: str, augmented_training):
     plt.box(False)
     plt.tight_layout()
     if augmented_training is not None:
-        plt.savefig(f"/lustre/groups/cbm01/workspace/martin.meinel/Safari/Classifier/figures/Training_procedures/Mixed_data_augmented_training_threshold_tuning_boxplot_{genes}_f1.svg", bbox_inches="tight")
+        plt.savefig(f"/figures/Training_procedures/Mixed_data_augmented_training_threshold_tuning_boxplot_{genes}_f1.svg", bbox_inches="tight")
     else:
-        plt.savefig(f"/lustre/groups/cbm01/workspace/martin.meinel/Safari/Classifier/figures/Training_procedures/Mixed_data_original_training_threshold_tuning_boxplot_{genes}.svg", bbox_inches="tight")
+        plt.savefig(f"/figures/Training_procedures/Mixed_data_original_training_threshold_tuning_boxplot_{genes}.svg", bbox_inches="tight")
     plt.close()
 
 @hydra.main(version_base=None, config_path="conf", config_name="validation")

@@ -32,7 +32,7 @@ def plot_pie_chart(data: pd.DataFrame):
     fig.gca().add_artist(center_circle)
     plt.axis('equal')
     plt.tight_layout()
-    plt.savefig("/Users/martin.meinel/Desktop/Projects/Eyerich Projects/Natalie/Classifier/Final_results/Figures/Figure4/pie_chart_overall_test.svg", bbox_inches="tight")
+    plt.savefig("/Figures/Figure4/pie_chart_overall_test.svg", bbox_inches="tight")
     plt.close()
 
 
@@ -59,7 +59,7 @@ def main():
     test_data = load_qpcr_data()
     # test_data = test_data.loc[test_data["wahre Diagnose"] != "unclear", :]
     test_data_annotations = pd.read_excel(
-        "/Users/martin.meinel/Desktop/Projects/Eyerich Projects/Natalie/Classifier/Validation data/Test data/Cohorts/2025-09-25_Data Figures.xlsx",
+        "/2025-09-25_Data Figures.xlsx",
     usecols=["sampleID", "wahre Diagnose"])
     test_data_annotations = test_data_annotations.iloc[169:311]
     test_data.drop(columns = "wahre Diagnose", inplace=True)
@@ -97,7 +97,7 @@ def main():
         cols = ["sampleID", "wahre Diagnose","Zentrum", "train_test", "LCK_run1", "LCK_run2", "HOMER1_run1", "HOMER1_run2",
                 "SDHAF_run1", "SDHAF_run2", "TBP_run1", "TBP_run2", "HOMER1_TBP_LCK_TBP_HOMER1_SDHAF_LCK_SDHAF_baseline_probabilities_calibrated"]
         params = load_params(
-            "/Users/martin.meinel/Desktop/Projects/Eyerich Projects/Natalie/Classifier/Validation data/Test data/params/HOMER1_TBP_LCK_TBP_HOMER1_SDHAF_LCK_SDHAF_baseline__calibrated_params.json")
+            "/params/HOMER1_TBP_LCK_TBP_HOMER1_SDHAF_LCK_SDHAF_baseline__calibrated_params.json")
         qpcr_data = load_qpcr_data()
         housekeeper= "TBP"
         training_data = qpcr_data.iloc[1:167]
@@ -229,7 +229,7 @@ def main():
         plt.tight_layout()
         feature1 = xcol.split("_")[0]
         feature2 = ycol.split("_")[0]
-        output_path = "/Users/martin.meinel/Desktop/Projects/Eyerich Projects/Natalie/Classifier/Final_results/Figures/Figure4"
+        output_path = "/Figures/Figure4"
         plt.savefig(os.path.join(output_path,
                                  f"{feature1}_{feature2}_{cohort[0]}_test_plot.svg"),
                     dpi=300, bbox_inches='tight')

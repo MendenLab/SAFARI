@@ -29,7 +29,7 @@ def probability_plot(sample_data):
     plt.grid(False)
     plt.tight_layout()
     sample = sample_data["sampleID"].values[0]
-    plt.savefig(os.path.join(f"/Users/martin.meinel/Desktop/Projects/Eyerich Projects/Natalie/Classifier/Final_results/Figures/Figure6/Verlauf",
+    plt.savefig(os.path.join(f"/Figures/Figure6/Verlauf",
                              f"{sample}.pdf"),  dpi=300, bbox_inches='tight')
     plt.close()
 
@@ -52,7 +52,7 @@ def plot_patient_history(patient_data, patient):
     plt.grid(False)
     sns.despine()
     plt.tight_layout()
-    plt.savefig(os.path.join(f"/Users/martin.meinel/Desktop/Projects/Eyerich Projects/Natalie/Classifier/Final_results/Figures/Figure6/Verlauf2",
+    plt.savefig(os.path.join(f"/Figures/Figure6/Verlauf2",
                              f"patient_{patient+1}.pdf"),  dpi=300, bbox_inches='tight')
     plt.close()
 

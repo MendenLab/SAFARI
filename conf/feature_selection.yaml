@@ -11,16 +11,12 @@ run_type: mf
 schema:
   run_type:
     type: str
-    allowed: [mf, psoriasis]
-  model:
-    type: str
-    allowed: [FFS, logistic]
+    allowed: [mf]
 
 
 paths:
-  workdir: "/lustre/groups/cbm01/workspace/martin.meinel/Safari"
-  datadir: "/lustre/groups/cbm01/datasets/martin.meinel/Safari"
-  datadir_pso: ${paths.datadir}/Psoriasis_Eczema
+  workdir: "/workspace/Safari"
+  datadir: "/datasets/Safari"
 
 
 mf:
@@ -29,4 +25,3 @@ mf:
   data_split: ${paths.datadir}/train_test_ec_pso_mf.xlsx
   d1_nl_path: ${paths.datadir}/pso_eczema_nonL_results_unpaired_edgeR_wo_mf.rds
   d2_nl_path: ${paths.datadir}/cutaneous_lymphoma_results_unpaired_edgeR_wo_mf.rds
-  n_samples: 3

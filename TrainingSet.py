@@ -60,7 +60,6 @@ class TrainingSet:
         self.normalizedCounts = self.normalizedCounts.loc[self.normalizedCounts.index.isin(significantGenes), :]
         assert self.countData.index.equals(self.normalizedCounts.index)
 
-
     def getEstimator(self, estimator: str):
         """
         Given an estimator name we create an estimator with the default parameters but with parameters for the
@@ -77,12 +76,13 @@ class TrainingSet:
         if estimator == "logistic":
             estimator = LogisticRegression(class_weight="balanced", solver="saga", random_state=0)
         elif estimator == "xgboost":
-            estimator = xgb.XGBClassifier(objective="binary:logistic", scale_pos_weight=weighting_factor, random_state=0)
+            estimator = xgb.XGBClassifier(objective="binary:logistic", scale_pos_weight=weighting_factor,
+                                          random_state=0)
         else:
             estimator = LinearSVC(class_weight="balanced", random_state=0)
         return estimator
 
-    def train(self, method: str = "logistic", ffs_model="logistic"):
+    def train(self, ffs_model="logistic"):
         """
         Trains a logistic regression model with different weights for MF and eczema (6:1)
         and stores the parameters and its features in ClassificationResult
@@ -97,59 +97,43 @@ class TrainingSet:
         """
         if len(np.unique(self.labels)) > 2:
             raise ValueError("Not implemented for more than two classes.")
-        scl = StandardScaler()
-        if method == "logistic":
-            # Logistic Regression for two classes [use default values]
-            model = LogisticRegression(solver="saga", max_iter=500, penalty="l1", class_weight="balanced",
-                                       random_state=0)
-            model = Pipeline(steps=[("scaler", scl), ("estimator", model)])
-            model.fit(self.normalizedCounts.T.to_numpy(), self.labels)
-            coefficients = np.zeros(self.normalizedCounts.shape[0])
-            coefficients += np.squeeze(model[1].coef_)
-            sorted_args_coefficients = np.argsort(np.abs(coefficients))[::-1]
-            sorted_coefficients = coefficients[sorted_args_coefficients]
-            sorted_features = self.normalizedCounts.index[sorted_args_coefficients].values
-            # omit features who are not relevant for the model
-            features = sorted_features[sorted_coefficients != 0]
-            coefficients = sorted_coefficients[sorted_coefficients != 0]
-        else:
-            selected_features = []
-            best_performance = 0.0
-            tolerance = 0.005
-            # Here the shape is D times N
-            while len(selected_features) < self.normalizedCounts.shape[0]:
-                remaining_features = sorted(list(set(self.normalizedCounts.index) - set(selected_features)))
-                performances = []
-                for feature in remaining_features:
-                    current_features = selected_features + [feature]
-                    X = self.normalizedCounts.loc[current_features, :].T  # X has shape N times D
-                    cv = StratifiedKFold(n_splits=4)
-                    estimator = self.getEstimator(ffs_model)
-                    model = Pipeline(steps=[("scaler", StandardScaler()),
-                                            ("estimator", estimator)])
-                    predictions = []
-                    ground_truth = []
-                    for train_ix, test_ix in cv.split(X, self.labels):
-                        X_train = X.iloc[train_ix, :]
-                        X_test = X.iloc[test_ix, :]
-                        y_train = self.labels[train_ix]
-                        y_test = self.labels[test_ix]
-                        model.fit(X_train, y_train)
-                        y_hat = model.predict(X_test)
-                        predictions.extend(y_hat)
-                        ground_truth.extend(y_test)
-                    performance = f1_score(y_true=ground_truth, y_pred=predictions)
-                    performances.append(performance)
+        selected_features = []
+        best_performance = 0.0
+        tolerance = 0.005
+        # Here the shape is D times N
+        while len(selected_features) < self.normalizedCounts.shape[0]:
+            remaining_features = sorted(list(set(self.normalizedCounts.index) - set(selected_features)))
+            performances = []
+            for feature in remaining_features:
+                current_features = selected_features + [feature]
+                X = self.normalizedCounts.loc[current_features, :].T  # X has shape N times D
+                cv = StratifiedKFold(n_splits=4)
+                estimator = self.getEstimator(ffs_model)
+                model = Pipeline(steps=[("scaler", StandardScaler()),
+                                        ("estimator", estimator)])
+                predictions = []
+                ground_truth = []
+                for train_ix, test_ix in cv.split(X, self.labels):
+                    X_train = X.iloc[train_ix, :]
+                    X_test = X.iloc[test_ix, :]
+                    y_train = self.labels[train_ix]
+                    y_test = self.labels[test_ix]
+                    model.fit(X_train, y_train)
+                    y_hat = model.predict(X_test)
+                    predictions.extend(y_hat)
+                    ground_truth.extend(y_test)
+                performance = f1_score(y_true=ground_truth, y_pred=predictions)
+                performances.append(performance)
 
-                best_feature = np.argmax(performances)
-                current_best_performance = performances[best_feature]
+            best_feature = np.argmax(performances)
+            current_best_performance = performances[best_feature]
 
-                if current_best_performance > best_performance + tolerance:
-                    best_performance = current_best_performance
-                    # Store best feature of selection round
-                    selected_features.append(remaining_features[best_feature])
-                else:
-                    break
-            features = selected_features
-            coefficients = [i for i in range(len(features))]
+            if current_best_performance > best_performance + tolerance:
+                best_performance = current_best_performance
+                # Store best feature of selection round
+                selected_features.append(remaining_features[best_feature])
+            else:
+                break
+        features = selected_features
+        coefficients = [i for i in range(len(features))]
         self.trainingResult = ClassificationResult(coefficients=coefficients, features=features)

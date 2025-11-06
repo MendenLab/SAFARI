@@ -1,20 +1,20 @@
 import json
 import os
 from collections import Counter
-from collections import Counter
 from typing import Tuple
-from scipy.special import logit
+
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
+from Classifier.pyutils import compute_sensitivity, compute_specificity
 from matplotlib.colors import to_hex, to_rgb
+from scipy.special import logit
 from scipy.stats import mannwhitneyu
 from sklearn.metrics import roc_curve, roc_auc_score, f1_score, balanced_accuracy_score
 from statannotations.Annotator import Annotator
 from statsmodels.stats.multitest import fdrcorrection
 
-from Classifier.pyutils import compute_sensitivity, compute_specificity
 from Validation_run import compute_geometric_mean, normalize_raw_counts, quality_control_qpcr
 
 sns.set_style("white")
@@ -62,7 +62,7 @@ def plot_piechart(data: pd.DataFrame, main):
                           "Eczema": "#39ac5e",
                           "Eczema_Pso": "#00858a"}
         colors = [custom_palette[disease] for disease in counter.keys()]
-        path = "/Users/martin.meinel/Desktop/Projects/Eyerich Projects/Natalie/Classifier/Final_results/Figures/Figure3/pie_chart_qpcr_train_main.svg"
+        path = "/Figures/Figure3/pie_chart_qpcr_train_main.svg"
         # Adjustment to get the brown ring
         mf_mask = [label == "MF" for label in labels]
         non_mf_total = sum(occ for i, occ in enumerate(occurences) if not mf_mask[i])
@@ -87,7 +87,7 @@ def plot_piechart(data: pd.DataFrame, main):
         occurences = [item[1] for item in sorted_items]
         labels = [item[0] for item in sorted_items]
         colors = [custom_palette[disease] for disease in labels]
-        path = "/Users/martin.meinel/Desktop/Projects/Eyerich Projects/Natalie/Classifier/Final_results/Figures/Figure3/pie_chart_qpcr_train_supplements.pdf"
+        path = "/Figures/Figure3/pie_chart_qpcr_train_supplements.pdf"
 
     plt.figure(figsize=(2, 2))
     if main:
@@ -223,11 +223,11 @@ def create_expression_boxplot(data, supplements, reference_gene: str = "TBP"):
     plt.tight_layout()
     if supplements:
         plt.savefig(
-            f"/Users/martin.meinel/Desktop/Projects/Eyerich Projects/Natalie/Classifier/Final_results/Figures/Figure3/Expression_boxplot_{reference_gene}_supplements.svg",
+            f"/Figures/Figure3/Expression_boxplot_{reference_gene}_supplements.svg",
             bbox_inches="tight")
     else:
         plt.savefig(
-            f"/Users/martin.meinel/Desktop/Projects/Eyerich Projects/Natalie/Classifier/Final_results/Figures/Figure3/Expression_boxplot_{reference_gene}.svg",
+            f"/Figures/Figure3/Expression_boxplot_{reference_gene}.svg",
             bbox_inches="tight")
     plt.close()
 
@@ -345,7 +345,7 @@ def scatter_plot_training(data: pd.DataFrame, housekeeper, params, highlight=Fal
     plt.grid(False)
     feature1 = xcol.split("_")[0]
     feature2 = ycol.split("_")[0]
-    output_path = "/Users/martin.meinel/Desktop/Projects/Eyerich Projects/Natalie/Classifier/Final_results/Figures/Figure3"
+    output_path = "/Figures/Figure3"
     if highlight:
         plt.savefig(os.path.join(output_path,
                                  f"{feature1}_{feature2}_{housekeeper}_highlighted_scatter_plot.svg"),
@@ -386,7 +386,7 @@ def plot_roc_curve(training_data):
     sns.despine()
     plt.grid(False)
     plt.savefig(
-        "/Users/martin.meinel/Desktop/Projects/Eyerich Projects/Natalie/Classifier/Final_results/Figures/Figure3/Training_data_roc.svg",
+        "/Figures/Figure3/Training_data_roc.svg",
         dpi=300, bbox_inches='tight')
     plt.show()
     plt.close()
@@ -423,7 +423,7 @@ def create_probability_plot(training_data, supplements=False):
     plt.ylabel("Probability for MF", fontsize=6)
     plt.tick_params(axis='both', labelsize=6)
     plt.tight_layout()
-    plt.savefig(f"/Users/martin.meinel/Desktop/Projects/Eyerich Projects/Natalie/Classifier/Final_results/Figures/Figure3/Probability_plot_{sup}.svg",
+    plt.savefig(f"/Figures/Figure3/Probability_plot_{sup}.svg",
                 bbox_inches='tight')
     plt.show()
     plt.close()
@@ -442,7 +442,7 @@ def create_predictions_pie(training_data):
     plt.axis('equal')
     plt.tight_layout()
     plt.savefig(
-        "/Users/martin.meinel/Desktop/Projects/Eyerich Projects/Natalie/Classifier/Final_results/Figures/Figure3/Predictions_pie.svg",
+        "/Figures/Figure3/Predictions_pie.svg",
     )
     plt.close()
 
@@ -499,7 +499,7 @@ def main():
         # normalize raw counts
         normalized_data  = normalize_raw_counts(aggregated_data, reference_genes=[housekeeper])
         all_data = pd.merge(normalized_data, training_data.loc[:, ["wahre Diagnose", "sampleID"]], left_index=True, right_on="sampleID", how="inner")
-        params = load_params("/Users/martin.meinel/Desktop/Projects/Eyerich Projects/Natalie/Classifier/Validation data/Test data/Test_set_predictions_paper/local/params/HOMER1_TBP_LCK_TBP_HOMER1_SDHAF_LCK_SDHAF_baseline_calibrated_params.json")
+        params = load_params("/params/HOMER1_TBP_LCK_TBP_HOMER1_SDHAF_LCK_SDHAF_baseline_calibrated_params.json")
         scatter_plot_training(all_data, housekeeper=housekeeper,params=params, highlight=False)
     elif subplot == "d":
         plot_roc_curve(training_data)

@@ -40,8 +40,6 @@ def fit_predict(train_data, train_labels, test_data, scorer, mode="baseline", sa
     param_grid = get_qpcr_parameter_space()
     scorer = get_scorer(scorer_name=scorer)
     output_dir = os.path.join(output_path, "params")
-    # output_dir = "/lustre/groups/cbm01/datasets/martin.meinel/Safari/params"
-    # output_dir = "/Users/martin.meinel/Desktop/Projects/Eyerich Projects/Natalie/Classifier/Validation data/Test data/Test_set_predictions_paper/local/params"
     os.makedirs(output_dir, exist_ok=True)
     sorted_features = "_".join(train_data.columns)
     if augmentation:

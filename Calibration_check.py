@@ -49,7 +49,7 @@ def create_calibration_histogram(data: pd.DataFrame, mode="baseline"):
     fig.suptitle(f"Calibration plot for model: {mode}", fontsize=8)
     sns.despine(ax=ax2)
     plt.tight_layout()
-    plt.savefig(f"/Users/martin.meinel/Desktop/Projects/Eyerich Projects/Natalie/Classifier/Final_results/Figures/Misc/calibration_plot_{mode}.svg")
+    plt.savefig(f"/Figures/Misc/calibration_plot_{mode}.svg")
     plt.close()
 
     binary_labels = data["wahre Diagnose"] == "MF"
@@ -153,7 +153,7 @@ def create_rac_curves(data, mode, symmetric=True):
 
         plt.title(f"Sensitivity, Specificity, and Percentage of Rejected Samples vs Rejection Interval Width for model: {mode}")
         plt.tight_layout()
-        plt.savefig(f"/Users/martin.meinel/Desktop/Projects/Eyerich Projects/Natalie/Classifier/Final_results/Figures/Misc/RAC_curve_{mode}_symmetric.svg")
+        plt.savefig(f"/Figures/Misc/RAC_curve_{mode}_symmetric.svg")
         plt.close()
     else:
         sensitivity_threshold = np.arange(0.0, 0.5, 0.05)
@@ -236,7 +236,7 @@ def create_rac_curves(data, mode, symmetric=True):
         lines_twin2, labels_twin2 = ax2_twin.get_legend_handles_labels()
         ax2.legend(lines2 + lines_twin2, labels2 + labels_twin2, loc="upper left")
         plt.tight_layout()
-        plt.savefig(f"/Users/martin.meinel/Desktop/Projects/Eyerich Projects/Natalie/Classifier/Final_results/Figures/Misc/RAC_curve_{mode}_asymmetric.svg")
+        plt.savefig(f"/Figures/Misc/RAC_curve_{mode}_asymmetric.svg")
         plt.close()
 
 
@@ -245,49 +245,30 @@ def create_reliability_curve(data):
     data["wahre Diagnose"] = np.where(data["wahre Diagnose"] == "MF", 1, 0)
     ground_truth = data["wahre Diagnose"].values
     # Raw baseline
-    prob_baseline =  data["HOMER1_TBP_LCK_TBP_HOMER1_SDHAF_LCK_SDHAF_baseline_probabilities"]
-    ece_baseline = expected_calibration_error(ground_truth, prob_baseline.values, n_bins=n_bins)
     #Calibrated baseline
     prob_baseline_calibrated = data["HOMER1_TBP_LCK_TBP_HOMER1_SDHAF_LCK_SDHAF_baseline_probabilities_calibrated"]
     ece_baseline_calibrated = expected_calibration_error(ground_truth, prob_baseline_calibrated.values, n_bins=n_bins)
-    #Raw Gridsearch
-    prob_gridsearch = data["HOMER1_TBP_LCK_TBP_HOMER1_SDHAF_LCK_SDHAF_gridsearch_cv_probabilities"]
-    ece_gridsearch = expected_calibration_error(ground_truth, prob_gridsearch.values, n_bins=n_bins)
-    #Calibrated Gridsearch
-    prob_gridsearch_calibrated = data["HOMER1_TBP_LCK_TBP_HOMER1_SDHAF_LCK_SDHAF_gridsearch_cv_probabilities_calibrated"]
-    ece_gridseach_calibrated = expected_calibration_error(ground_truth, prob_gridsearch_calibrated.values, n_bins=n_bins)
-
-    prob_true_baseline, prob_pred_baseline = calibration_curve(ground_truth, prob_baseline, n_bins=n_bins)
     prob_true_baseline_calibrated, prob_pred_baseline_calibrated = calibration_curve(ground_truth, prob_baseline_calibrated, n_bins=n_bins)
-    prob_true_gridsearch, prob_pred_gridsearch = calibration_curve(ground_truth, prob_gridsearch, n_bins=n_bins)
-    prob_true_gridsearch_calibrated, prob_pred_gridsearch_calibrated = calibration_curve(ground_truth, prob_gridsearch_calibrated, n_bins=n_bins)
-
     fig, ax1 = plt.subplots(figsize=(4, 4))
-    # sns.lineplot(x=prob_pred_baseline, y=prob_true_baseline, ax=ax1, label="Baseline: ECE {:.3f}".format(ece_baseline), color="tab:blue", marker="o", linewidth=1.5, markersize=5)
     sns.lineplot(x=prob_pred_baseline_calibrated, y=prob_true_baseline_calibrated, ax=ax1, label="Baseline calibrated: ECE {:.3f}".format(ece_baseline_calibrated), color="tab:orange", marker="s", linewidth=1.5, markersize=5)
-    # sns.lineplot(x=prob_pred_gridsearch, y=prob_true_gridsearch, ax=ax1, label="Gridsearch ECE {:.3f}".format(ece_gridsearch), color="tab:green", marker="d", linewidth=1.5, markersize=5)
-    # sns.lineplot(x=prob_pred_gridsearch_calibrated, y=prob_true_gridsearch_calibrated, ax=ax1, label="Gridsearch calibrated ECE {:.3f}".format(ece_gridseach_calibrated), color="tab:red", marker="p", linewidth=1.5, markersize=5)
     # Add the Perfect Calibration Line
     ax1.plot([0, 1], [0, 1], "k--", label="Perfect Calibration", linewidth=1.0)  # Use "k--" for a dashed black line
-
-    # ... (rest of your sns.lineplot calls)
     ax1.set_xlabel("Mean predicted probability (Confidence)", fontsize=6)
     ax1.set_ylabel("Fraction of positives (Accuracy)", fontsize=6)
     ax1.set_ylim(0, 1.1)
     ax1.set_yticks(np.arange(0, 1.1, 0.1))
     ax1.set_xticks(np.arange(0, 1.1, 0.1))
     ax1.tick_params(axis='both', which='major', labelsize=6)
-    # ax1.legend(loc="lower right", fontsize=6)
     ax1.get_legend().remove()
     sns.despine(ax=ax1)
     plt.grid(False)
     plt.tight_layout()
-    plt.savefig("/Users/martin.meinel/Desktop/Projects/Eyerich Projects/Natalie/Classifier/Final_results/Figures/Misc/reliability_curve_no_legend.svg")
+    plt.savefig("/Figures/Misc/reliability_curve_no_legend.svg")
     plt.close()
 
 
 def main():
-    path = "/Users/martin.meinel/Desktop/Projects/Eyerich Projects/Natalie/Classifier/Validation data/Test data"
+    path = "/Test data"
     file = os.path.join(path, "Paper_sheet.xlsx")
     file = pd.read_excel(file, usecols=["sampleID", "train_test", "Zentrum", "wahre Diagnose",
                                         "HOMER1_TBP_LCK_TBP_HOMER1_SDHAF_LCK_SDHAF_baseline_predictions",
@@ -305,14 +286,9 @@ def main():
     train["wahre Diagnose"] = train["wahre Diagnose"].str.replace("Eczema_Pso", "Eczema|Psoriasis")
     print(train.shape)
     assert train.shape[0] == 166
-    # modes = ["baseline", "gridsearch_cv", "baseline_calibrated", "gridsearch_cv_calibrated"]
-    # for mode in modes:
-    #     create_calibration_histogram(train, mode=mode)
     create_reliability_curve(train)
-    # create_rac_curves(train, "baseline_calibrated", symmetric=True)
-    # create_rac_curves(train, "gridsearch_cv_calibrated", symmetric=True)
-    # create_rac_curves(train, "baseline_calibrated", symmetric=False)
-    # create_rac_curves(train, "gridsearch_cv_calibrated", symmetric=False)
+    create_rac_curves(train, "baseline_calibrated", symmetric=True)
+    create_rac_curves(train, "baseline_calibrated", symmetric=False)
 
 if __name__ == "__main__":
     main()
